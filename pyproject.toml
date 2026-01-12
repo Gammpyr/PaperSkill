@@ -1,0 +1,30 @@
+[project]
+name = "paperskill"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Gamid Abdulkhalikov",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "django (>=6.0.1,<7.0.0)",
+    "djangorestframework (>=3.16.1,<4.0.0)",
+    "psycopg2-binary (>=2.9.11,<3.0.0)",
+    "djangorestframework-simplejwt (>=5.5.1,<6.0.0)",
+    "stripe (>=14.1.0,<15.0.0)",
+    "redis (>=7.1.0,<8.0.0)",
+    "drf-yasg (>=1.21.11,<2.0.0)",
+    "python-dotenv (>=1.2.1,<2.0.0)",
+    "pillow (>=12.1.0,<13.0.0)",
+    "coverage (>=7.13.1,<8.0.0)",
+    "django-cors-headers (>=4.9.0,<5.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
