@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}PaperSkill{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+	<div class="container">
+		<a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
+			<div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+				 style="width: 40px; height: 40px;">
+				<i class="bi bi-mortarboard"></i>
+			</div>
+			Paper<span class="text-primary">Skill</span>
+		</a>
+
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link active" href="#">Главная</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#courses">Курсы</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">О нас</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Контакты</a>
+				</li>
+			</ul>
+
+			<div class="d-flex ms-lg-3">
+				<a href="/login" class="btn btn-outline-primary me-2">Войти</a>
+				<a href="/register" class="btn btn-primary">Регистрация</a>
+			</div>
+		</div>
+	</div>
+</nav>
+
+{% block content %}
+
+{% endblock %}
+
+<footer class="bg-dark text-white py-5">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+				<div class="d-flex align-items-center mb-4">
+					<div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
+						 style="width: 32px; height: 32px;">
+						<i class="bi bi-mortarboard"></i>
+					</div>
+					<span class="h5 mb-0">Paper<span class="text-primary">Skill</span></span>
+				</div>
+				<p class="mb-0 text-muted">
+					Платформа для онлайн-обучения, которая помогает вам осваивать новые навыки и достигать
+					профессиональных высот.
+				</p>
+			</div>
+
+			<div class="col-lg-2 col-md-3 mb-4 mb-md-0">
+				<h5 class="text-white mb-4">Курсы</h5>
+				<ul class="list-unstyled text-muted">
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Программирование</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Дизайн</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Маркетинг</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Бизнес</a></li>
+				</ul>
+			</div>
+
+			<div class="col-lg-2 col-md-3 mb-4 mb-md-0">
+				<h5 class="text-white mb-4">Компания</h5>
+				<ul class="list-unstyled text-muted">
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">О нас</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Карьера</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Контакты</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Блог</a></li>
+				</ul>
+			</div>
+
+			<div class="col-lg-4 col-md-6">
+				<h5 class="text-white mb-4">Поддержка</h5>
+				<ul class="list-unstyled text-muted">
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Помощь</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">FAQ</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Обратная связь</a></li>
+					<li class="mb-2"><a href="#" class="text-muted text-decoration-none">Политика конфиденциальности</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<hr class="my-4 text-secondary">
+		<div class="text-center text-muted">
+			<p class="mb-0">&copy; 2026 PaperSkill. Все права защищены.</p>
+		</div>
+	</div>
+</footer>
+
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

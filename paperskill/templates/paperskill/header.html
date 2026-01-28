@@ -1,0 +1,18 @@
+<header>
+	<div class="container text-center">
+		<h1>PaperSkill</h1>
+		{% if user.is_authenticated %}
+		<p>Добро пожаловать, {{ user.first_name|title }}!</p>
+		<nav>
+			<a href="{% url 'paperskill:course_list' %}" class="btn btn-primary mb-4">Список курсов</a>
+			<a href="{% url 'paperskill:course_create' %}" class="btn btn-primary mb-4">Добавить новый курс</a>
+		</nav>
+		{% else %}
+		<p>Добро пожаловать!</p>
+		<nav>
+			<a href="{% url 'paperskill:course_list' %}" class="btn btn-primary mb-4">Список курсов</a>
+		</nav>
+		{% endif %}
+
+	</div>
+</header>

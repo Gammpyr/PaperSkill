@@ -1,0 +1,49 @@
+{% extends 'paperskill/base.html' %}
+
+{% block title %}Список курсов{% endblock %}
+
+{% block content %}
+
+{% include 'paperskill/header.html' %}
+
+<div class="row text-center mb-4">
+	<div class="col-md-12">
+		<div class="btn-group">
+			<a href="{% url 'paperskill:course_list' %}"
+			   class="btn btn-outline-primary {% if not current_category %}active{% endif %}" aria-current="page">Все</a>
+			{% for category in categories %}
+			<a href="{% url 'paperskill:course_category_list' category.id %}"
+			   class="btn btn-outline-primary {% if current_category and category.id == current_category.id %}active{% endif %}">
+				{{ course.name }}</a>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+
+<div class="row text-center mx-auto">
+	{% for course in courses %}
+	<div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+		<div class="card mb-4 box-shadow">
+			<div class="card-header">
+				<h4 class="my-0 font-weight-normal">{{course.name}}</h4>
+			</div>
+			<div class="card-body">
+				{% if course.image %}
+				<img class="img-thumbnail rounded" style="max-width: 100%; max-height: 200px;" src={{course.image.url}}
+					 alt={{course.name}}>
+				{% endif %}
+				<h1 class="card-title pricing-card-title">{{course.price}}</h1>
+				<p>{{course.description|linebreaks|truncatechars:100}}</p>
+				<a class="btn btn-lg btn-block  btn-outline-info" href="{% url 'paperskill:course_detail' course.pk %}"
+				   role="button">Подробнее</a><br>
+				<button type="button" class="btn btn-lg btn-block btn-outline-primary mt-2">Купить</button>
+
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+{% endblock %}
+
