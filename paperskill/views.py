@@ -52,10 +52,6 @@ class CourseSubscriptionAPIView(APIView):
             return Response({'message': 'Курс уже начат!'}, status=200)
 
 
-
-
-
-
 class CourseListView(ListView):
     model = Course
     template_name = 'paperskill/course/list.html'
@@ -65,4 +61,3 @@ class CourseListView(ListView):
         return Course.objects.prefetch_related('lessons').annotate(
             lesson_count=Count('lessons')
         )
-
