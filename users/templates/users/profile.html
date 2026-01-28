@@ -23,7 +23,7 @@
                         </div>
                     {% endif %}
                     
-                    <h4 class="fw-bold">{{ user.first_name|default:user.username }} {{ user.last_name|default:"" }}</h4>
+                    <h4 class="fw-bold">{{ user.first_name|default:"" }} {{ user.last_name|default:"" }}</h4>
                     <p class="text-muted mb-3">{{ user.email }}</p>
                     
                     {% if user.country %}
@@ -45,15 +45,15 @@
                     <h5 class="fw-bold mb-3">Статистика обучения</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Купленные курсы</span>
-                        <span class="fw-bold">{{ user.bought_courses }}</span>
+                        <span class="fw-bold">{{ user.bought_courses.count }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Начатые курсы</span>
-                        <span class="fw-bold">{{ user.courses }}</span>
+                        <span class="fw-bold">{{ user.courses.count }}</span>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span class="text-muted">Завершенные курсы</span>
-                        <span class="fw-bold">{{ completed_courses_count }}</span>
+                        <span class="fw-bold">{{ user.completed_courses.count }}</span>
                     </div>
                 </div>
             </div>
