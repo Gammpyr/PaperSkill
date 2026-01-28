@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import User
+from users.models import User, Payment
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -24,3 +24,31 @@ class CustomUserSerializer(serializers.ModelSerializer):
             avatar=validated_data.get('avatar', None),
         )
         return user
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = "__all__"
+        read_only_fields = [
+            "user",
+            "session_id",
+            "payment_url",
+            "product_id",
+            "price_id",
+        ]
+
+    def validate_payment_amount(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("Сумма платежа должна быть больше 0.")
+        return value
+
+    # def validate(self, data):
+    #     paid_course = data.get("paid_course")
+    #     paid_lesson = data.get("paid_lesson")
+    #
+    #     if not paid_course and not paid_lesson:
+    #         raise serializers.ValidationError("Укажите, за что вы хотите оплатить. За курс или урок.")
+    #     if paid_course and paid_lesson:
+    #         raise serializers.ValidationError("Можно оплатить либо за курс, либо за урок.")
+    #     return data
