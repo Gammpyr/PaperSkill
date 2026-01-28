@@ -28,14 +28,14 @@ class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
 
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ["paid_course", "paid_lesson", "payment_method"]
+    filterset_fields = ["paid_course", "payment_method"]
     ordering_fields = ["payment_date"]
 
     def perform_create(self, serializer):
         try:
             payment = serializer.save(user=self.request.user)
 
-            product_name = payment.paid_course.name if payment.paid_course else payment.paid_lesson.name
+            product_name = payment.paid_course.name
 
             product = create_stripe_product(product_name)
             price = create_stripe_price(product, payment.payment_amount)
