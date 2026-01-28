@@ -16,7 +16,7 @@ class Course(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     is_paid = models.BooleanField(default=False, verbose_name="Платный курс")
-    category =
+    # category =
 
     def __str__(self):
         return f"{self.name} [Владелец: {self.owner}]"
