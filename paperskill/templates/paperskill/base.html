@@ -5,11 +5,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{% block title %}PaperSkill{% endblock %}</title>
 	<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
 	<div class="container">
-		<a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="#">
+		<a class="navbar-brand d-flex align-items-center fw-bold text-dark" href="{% url 'home' %}">
 			<div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
 				 style="width: 40px; height: 40px;">
 				<i class="bi bi-mortarboard"></i>
@@ -24,22 +25,27 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 				<li class="nav-item">
-					<a class="nav-link active" href="#">Главная</a>
+					<a class="nav-link active" href="{% url 'home' %}">Главная</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#courses">Курсы</a>
+					<a class="nav-link" href="{% url 'paperskill:courses_list' %}">Курсы</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">О нас</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Контакты</a>
+					<a class="nav-link" href="{% url 'contacts' %}">Контакты</a>
 				</li>
 			</ul>
 
 			<div class="d-flex ms-lg-3">
-				<a href="/login" class="btn btn-outline-primary me-2">Войти</a>
-				<a href="/register" class="btn btn-primary">Регистрация</a>
+				{% if user.is_authenticated %}
+				<a href="{% url 'users:profile' %}" class="btn btn-outline-primary me-2">{{ user.username }}</a>
+				<form method="post" action="{% url 'users:logout' %}" class="d-inline">
+					{% csrf_token %}
+					<button type="submit" class="btn btn-primary">Выйти</button>
+				</form>
+				{% else %}
+				<a href="{% url 'users:login' %}" class="btn btn-outline-primary me-2">Войти</a>
+				<a href="{% url 'users:register' %}" class="btn btn-primary">Регистрация</a>
+				{% endif %}
 			</div>
 		</div>
 	</div>
