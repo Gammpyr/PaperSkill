@@ -5,23 +5,21 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.shortcuts import get_object_or_404
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, FormView
+from django.views.generic import FormView, TemplateView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, viewsets
-from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter
-from rest_framework.response import Response
 
 from users.forms import CustomUserCreationForm
-from users.models import User, Payment
+from users.models import Payment, User
 from users.serializers import CustomUserSerializer, PaymentSerializer
-from users.services import create_stripe_product, create_stripe_price, create_stripe_session, check_payment_status
+from users.services import create_stripe_price, create_stripe_product, create_stripe_session
 
 
 class UserCreateAPIView(generics.CreateAPIView):
@@ -52,11 +50,9 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
             request = self.request
             success_url = request.build_absolute_uri(
-                reverse('users:payment_success', kwargs={'payment_id': payment.id})
+                reverse("users:payment_success", kwargs={"payment_id": payment.id})
             )
-            cancel_url = request.build_absolute_uri(
-                reverse('users:payment_cancel', kwargs={'payment_id': payment.id})
-            )
+            cancel_url = request.build_absolute_uri(reverse("users:payment_cancel", kwargs={"payment_id": payment.id}))
 
             product = create_stripe_product(payment.paid_course.name)
             price = create_stripe_price(product, payment.payment_amount)
@@ -72,13 +68,13 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
 
 class ProfileView(TemplateView):
-    template_name = 'users/profile.html'
+    template_name = "users/profile.html"
 
 
 class RegisterView(FormView):
-    template_name = 'users/register.html'
+    template_name = "users/register.html"
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('paperskill:course_list')
+    success_url = reverse_lazy("paperskill:course_list")
 
     def form_valid(self, form):
         user = form.save()
@@ -88,49 +84,49 @@ class RegisterView(FormView):
 
     def send_welcome_email(self, user):
         if user.email:
-            subject = 'Добро пожаловать в PaperSkill!'
-            message = f'{user.display_name.title()}, спасибо, что зарегистрировались на нашем сайте!'
+            subject = "Добро пожаловать в PaperSkill!"
+            message = f"{user.display_name.title()}, спасибо, что зарегистрировались на нашем сайте!"
             recipient_list = [user.email]
             send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
 
 
 class PaymentSuccessView(LoginRequiredMixin, TemplateView):
-    template_name = 'users/payment_success.html'
+    template_name = "users/payment_success.html"
 
     def get(self, request, *args, **kwargs):
-        payment_id = self.kwargs.get('payment_id')
-        session_id = request.GET.get('session_id')
+        payment_id = self.kwargs.get("payment_id")
+        session_id = request.GET.get("session_id")
 
         try:
             payment = get_object_or_404(Payment, id=payment_id, user=request.user)
 
             session = stripe.checkout.Session.retrieve(session_id)
 
-            if session.payment_status == 'paid':
-                payment.payment_status = 'succeeded'
+            if session.payment_status == "paid":
+                payment.payment_status = "succeeded"
                 payment.save()
 
                 if payment.paid_course and payment.paid_course not in request.user.bought_courses.all():
                     request.user.bought_courses.add(payment.paid_course)
                     request.user.save()
 
-                messages.success(request, 'Платеж успешно завершен! Курс добавлен в вашу библиотеку.')
+                messages.success(request, "Платеж успешно завершен! Курс добавлен в вашу библиотеку.")
             else:
-                messages.warning(request, 'Платеж не подтвержден. Пожалуйста, проверьте статус позже.')
+                messages.warning(request, "Платеж не подтвержден. Пожалуйста, проверьте статус позже.")
 
         except Exception as e:
-            messages.error(request, f'Ошибка при проверке платежа: {str(e)}')
+            messages.error(request, f"Ошибка при проверке платежа: {str(e)}")
 
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        payment_id = self.kwargs.get('payment_id')
+        payment_id = self.kwargs.get("payment_id")
 
         try:
             payment = Payment.objects.get(id=payment_id, user=self.request.user)
-            context['payment'] = payment
-            context['course'] = payment.paid_course
+            context["payment"] = payment
+            context["course"] = payment.paid_course
         except Payment.DoesNotExist:
             pass
 
@@ -139,53 +135,53 @@ class PaymentSuccessView(LoginRequiredMixin, TemplateView):
 
 class PaymentCancelView(LoginRequiredMixin, TemplateView):
     """Страница отмены оплаты"""
-    template_name = 'users/payment_cancel.html'
+
+    template_name = "users/payment_cancel.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        payment_id = self.kwargs.get('payment_id')
+        payment_id = self.kwargs.get("payment_id")
 
         try:
             payment = get_object_or_404(Payment, id=payment_id, user=self.request.user)
-            context['payment'] = payment
-            context['course'] = payment.paid_course
+            context["payment"] = payment
+            context["course"] = payment.paid_course
 
         except Payment.DoesNotExist:
-            messages.error(self.request, 'Платеж не найден')
+            messages.error(self.request, "Платеж не найден")
 
         return context
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class StripeWebhookView(View):
     """Обработчик вебхуков Stripe"""
 
     def post(self, request, *args, **kwargs):
         payload = request.body
-        sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+        sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
 
         try:
-            event = stripe.Webhook.construct_event(
-                payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
-            )
-        except ValueError as e:
-            return JsonResponse({'error': 'Invalid payload'}, status=400)
-        except stripe.error.SignatureVerificationError as e:
-            return JsonResponse({'error': 'Invalid signature'}, status=400)
+            event = stripe.Webhook.construct_event(payload, sig_header, settings.STRIPE_WEBHOOK_SECRET)
+        except ValueError:
+            return JsonResponse({"error": "Invalid payload"}, status=400)
+        except stripe.error.SignatureVerificationError:
+            return JsonResponse({"error": "Invalid signature"}, status=400)
 
         # Обработка события
-        if event['type'] == 'checkout.session.completed':
-            session = event['data']['object']
+        if event["type"] == "checkout.session.completed":
+            session = event["data"]["object"]
 
             # Находим платеж по сессии
-            session_id = session.get('id')
+            session_id = session.get("id")
             try:
                 from .models import Payment
+
                 payment = Payment.objects.get(session_id=session_id)
 
                 # Обновляем статус
-                if session.get('payment_status') == 'paid':
-                    payment.payment_status = 'succeeded'
+                if session.get("payment_status") == "paid":
+                    payment.payment_status = "succeeded"
                     payment.save()
 
                     # Добавляем курс в купленные
@@ -196,4 +192,4 @@ class StripeWebhookView(View):
             except Payment.DoesNotExist:
                 pass
 
-        return JsonResponse({'status': 'success'})
+        return JsonResponse({"status": "success"})

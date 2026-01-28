@@ -6,13 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0004_remove_user_username_user_completed_courses'),
+        ("users", "0004_remove_user_username_user_completed_courses"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='payment',
-            name='payment_status',
-            field=models.CharField(choices=[('pending', 'В ожидании'), ('succeeded', 'Успешно'), ('failed', 'Неудачно'), ('canceled', 'Отменено')], default='pending', max_length=20, verbose_name='Статус платежа'),
+            model_name="payment",
+            name="payment_status",
+            field=models.CharField(
+                choices=[
+                    ("pending", "В ожидании"),
+                    ("succeeded", "Успешно"),
+                    ("failed", "Неудачно"),
+                    ("canceled", "Отменено"),
+                ],
+                default="pending",
+                max_length=20,
+                verbose_name="Статус платежа",
+            ),
         ),
     ]

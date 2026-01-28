@@ -2,14 +2,7 @@ from django.db import models
 
 
 class Course(models.Model):
-
-    CATEGORIES = (
-        ("IT", "Программирование"),
-        ("DESIGN", "Дизайн"),
-        ("BUSINESS", "Бизнес"),
-        ("MARKETING", "Маркетинг")
-    )
-
+    CATEGORIES = (("IT", "Программирование"), ("DESIGN", "Дизайн"), ("BUSINESS", "Бизнес"), ("MARKETING", "Маркетинг"))
 
     name = models.CharField(max_length=255, verbose_name="Название")
     description = models.TextField(blank=True, verbose_name="Описание")
@@ -35,7 +28,6 @@ class Course(models.Model):
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
         ordering = ["id"]
-
 
 
 class Lesson(models.Model):
@@ -66,6 +58,7 @@ class Lesson(models.Model):
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
         ordering = ["id"]
+
 
 # class CourseSubscription(models.Model):
 #     user = models.ForeignKey(

@@ -1,8 +1,8 @@
-from django.contrib.auth.models import AbstractUser, UserManager, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
-from paperskill.models import Course, Lesson
+from paperskill.models import Course
 
 
 class CustomUserManager(BaseUserManager):
@@ -12,7 +12,7 @@ class CustomUserManager(BaseUserManager):
 
     def create_user(self, phone_number, password=None, **extra_fields):
         if not phone_number:
-            raise ValueError('Требуется номер телефона')
+            raise ValueError("Требуется номер телефона")
 
         user = self.model(phone_number=phone_number, **extra_fields)
         user.set_password(password)
@@ -20,36 +20,42 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, phone_number, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Суперпользователь должен иметь is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Суперпользователь должен иметь is_superuser=True.')
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Суперпользователь должен иметь is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Суперпользователь должен иметь is_superuser=True.")
 
         return self.create_user(phone_number, password, **extra_fields)
 
 
 class User(AbstractUser):
-    username = models.CharField(max_length=30, unique=True, blank=True, null=True, verbose_name='Имя пользователя', )
+    username = models.CharField(
+        max_length=30,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name="Имя пользователя",
+    )
     # username = None
-    email = models.EmailField(unique=True, verbose_name='email')
-    phone_number = PhoneNumberField(unique=True, verbose_name='Номер телефона')
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name='Аватар')
-    country = models.CharField(max_length=100, blank=True, null=True, verbose_name='Страна')
+    email = models.EmailField(unique=True, verbose_name="email")
+    phone_number = PhoneNumberField(unique=True, verbose_name="Номер телефона")
+    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True, verbose_name="Аватар")
+    country = models.CharField(max_length=100, blank=True, null=True, verbose_name="Страна")
 
-    courses = models.ManyToManyField('paperskill.Course', blank=True, related_name='users')
-    bought_courses = models.ManyToManyField('paperskill.Course', blank=True, related_name='buyers')
-    completed_courses = models.ManyToManyField('paperskill.Course', blank=True, related_name='completed')
+    courses = models.ManyToManyField("paperskill.Course", blank=True, related_name="users")
+    bought_courses = models.ManyToManyField("paperskill.Course", blank=True, related_name="buyers")
+    completed_courses = models.ManyToManyField("paperskill.Course", blank=True, related_name="completed")
 
     date_joined = models.DateTimeField(auto_now_add=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    USERNAME_FIELD = 'phone_number'
+    USERNAME_FIELD = "phone_number"
     # REQUIRED_FIELDS = ['username', 'email']
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ["email"]
 
     objects = CustomUserManager()
 

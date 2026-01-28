@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('paperskill', '0005_course_category'),
+        ("paperskill", "0005_course_category"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='lesson',
-            name='order',
-            field=models.PositiveIntegerField(default=0, verbose_name='Порядковый номер'),
+            model_name="lesson",
+            name="order",
+            field=models.PositiveIntegerField(default=0, verbose_name="Порядковый номер"),
         ),
     ]

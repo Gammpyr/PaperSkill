@@ -6,14 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('paperskill', '0004_course_price'),
+        ("paperskill", "0004_course_price"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='course',
-            name='category',
-            field=models.CharField(choices=[('IT', 'Программирование'), ('DESIGN', 'Дизайн'), ('BUSINESS', 'Бизнес'), ('MARKETING', 'Маркетинг')], default='IT', max_length=20, verbose_name='Категория'),
+            model_name="course",
+            name="category",
+            field=models.CharField(
+                choices=[
+                    ("IT", "Программирование"),
+                    ("DESIGN", "Дизайн"),
+                    ("BUSINESS", "Бизнес"),
+                    ("MARKETING", "Маркетинг"),
+                ],
+                default="IT",
+                max_length=20,
+                verbose_name="Категория",
+            ),
             preserve_default=False,
         ),
     ]

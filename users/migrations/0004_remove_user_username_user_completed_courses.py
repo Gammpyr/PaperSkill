@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('paperskill', '0004_course_price'),
-        ('users', '0003_payment'),
+        ("paperskill", "0004_course_price"),
+        ("users", "0003_payment"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='user',
-            name='username',
+            model_name="user",
+            name="username",
         ),
         migrations.AddField(
-            model_name='user',
-            name='completed_courses',
-            field=models.ManyToManyField(blank=True, related_name='completed', to='paperskill.course'),
+            model_name="user",
+            name="completed_courses",
+            field=models.ManyToManyField(blank=True, related_name="completed", to="paperskill.course"),
         ),
     ]
