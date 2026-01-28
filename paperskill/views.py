@@ -1,6 +1,7 @@
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, DetailView, CreateView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -55,9 +56,33 @@ class CourseSubscriptionAPIView(APIView):
 class CourseListView(ListView):
     model = Course
     template_name = 'paperskill/course/list.html'
-    context_object_name = 'courses'
+    context_object_name = 'courses_list'
 
     def get_queryset(self):
         return Course.objects.prefetch_related('lessons').annotate(
             lesson_count=Count('lessons')
         )
+
+class CourseDetailView(DetailView):
+    model = Course
+    template_name = 'paperskill/course/detail.html'
+    context_object_name = 'course'
+
+class CourseCreateView(CreateView):
+    model = Course
+    # form_class = CourseForm
+    template_name = 'paperskill/course/form.html'
+    fields = ['title', 'description', 'image', 'video_url', 'is_paid', 'price', ]
+    success_url = reverse_lazy('paperskill:course_list')
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated:
+            form.instance.owner = self.request.user
+            return super().form_valid(form)
+        else:
+            return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('paperskill:course_detail', kwargs={'pk': self.object.pk})
+
+
