@@ -1,0 +1,67 @@
+<!-- paperskill/templates/paperskill/lesson_form.html -->
+{% extends 'paperskill/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} — PaperSkill{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <a href="{% url 'paperskill:course_detail' course.pk %}" class="btn btn-outline-secondary mb-3">
+                            <i class="bi bi-arrow-left me-1"></i> Назад к курсу
+                        </a>
+                        <h2 class="h4 fw-bold">{{ title }}</h2>
+                        <p class="text-muted">Курс: <strong>{{ course.name }}</strong></p>
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback d-block">{{ form.name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.image.id_for_label }}" class="form-label">{{ form.image.label }}</label>
+                            {{ form.image }}
+                            {% if form.image.errors %}
+                                <div class="invalid-feedback d-block">{{ form.image.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">Рекомендуемый размер: 1200x630px</div>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-1"></i> Создать урок
+                            </button>
+                            <a href="{% url 'paperskill:course_detail' course.pk %}" class="btn btn-secondary">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+{% endblock %}

@@ -6,19 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('paperskill', '0002_alter_course_owner'),
-        ('users', '0001_initial'),
+        ("paperskill", "0002_alter_course_owner"),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='bought_courses',
-            field=models.ManyToManyField(blank=True, related_name='buyers', to='paperskill.course'),
+            model_name="user",
+            name="bought_courses",
+            field=models.ManyToManyField(blank=True, related_name="buyers", to="paperskill.course"),
         ),
         migrations.AddField(
-            model_name='user',
-            name='courses',
-            field=models.ManyToManyField(blank=True, related_name='users', to='paperskill.course'),
+            model_name="user",
+            name="courses",
+            field=models.ManyToManyField(blank=True, related_name="users", to="paperskill.course"),
         ),
     ]

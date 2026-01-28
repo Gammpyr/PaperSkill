@@ -1,0 +1,146 @@
+{% extends 'paperskill/base.html' %}
+{% load static %}
+
+{% block title %}Мой профиль — PaperSkill{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h1 class="display-6 fw-bold">Мой профиль</h1>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" class="rounded-circle mb-3" alt="Аватар" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
+                            <i class="bi bi-person-fill text-primary fs-1"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <h4 class="fw-bold">{{ user.first_name|default:"" }} {{ user.last_name|default:"" }}</h4>
+                    <p class="text-muted mb-3">{{ user.email }}</p>
+                    
+                    {% if user.country %}
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <i class="bi bi-geo-alt me-2 text-muted"></i>
+                            <span>{{ user.country }}</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="d-flex align-items-center justify-content-center">
+                        <i class="bi bi-calendar-check me-2 text-muted"></i>
+                        <span>Зарегистрирован: {{ user.date_joined|date:"d.m.Y" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Статистика обучения</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Купленные курсы</span>
+                        <span class="fw-bold">{{ user.bought_courses.count }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Начатые курсы</span>
+                        <span class="fw-bold">{{ user.courses.count }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Завершенные курсы</span>
+                        <span class="fw-bold">{{ user.completed_courses.count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 pb-0">
+                    <h5 class="fw-bold mb-3">Купленные курсы</h5>
+                </div>
+                <div class="card-body">
+                    {% if purchased_courses %}
+                        <div class="row g-3">
+                            {% for course in purchased_courses %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    {% if course.image %}
+                                        <img src="{{ course.image.url }}" class="me-3 rounded" alt="{{ course.name }}" style="width: 80px; height: 80px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-primary bg-opacity-10 rounded d-flex align-items-center justify-content-center me-3" style="width: 80px; height: 80px;">
+                                            <i class="bi bi-mortarboard text-primary"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="fw-bold mb-1">{{ course.name }}</h6>
+                                        <p class="text-muted small mb-2">{{ course.description|truncatewords:10 }}</p>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge bg-success me-2">Куплено</span>
+                                            <small class="text-muted">{{ course.created_at|date:"d.m.Y" }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">У вас пока нет купленных курсов.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pb-0">
+                    <h5 class="fw-bold mb-3">Начатые курсы</h5>
+                </div>
+                <div class="card-body">
+                    {% if started_courses %}
+                        <div class="row g-3">
+                            {% for course_progress in started_courses %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    {% if course_progress.course.image %}
+                                        <img src="{{ course_progress.course.image.url }}" class="me-3 rounded" alt="{{ course_progress.course.name }}" style="width: 80px; height: 80px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-primary bg-opacity-10 rounded d-flex align-items-center justify-content-center me-3" style="width: 80px; height: 80px;">
+                                            <i class="bi bi-mortarboard text-primary"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="fw-bold mb-1">{{ course_progress.course.name }}</h6>
+                                        <div class="mb-2">
+                                            <div class="progress" style="height: 6px;">
+                                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ course_progress.completion_percentage }}%;" aria-valuenow="{{ course_progress.completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <small class="text-muted">{{ course_progress.completion_percentage }}% завершено</small>
+                                        </div>
+                                        <small class="text-muted">Последнее занятие: {{ course_progress.last_lesson_date|date:"d.m.Y" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Вы еще не начали ни одного курса.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+<!--            <div class="d-flex gap-2 mt-4">-->
+<!--                <a href="#" class="btn btn-outline-primary">Редактировать профиль</a>-->
+<!--                <a href="#" class="btn btn-outline-secondary">Настройки аккаунта</a>-->
+<!--            </div>-->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
