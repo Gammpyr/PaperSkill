@@ -11,10 +11,12 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name="courses",
+        related_name="owned_courses",
         verbose_name="Владелец",
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    is_paid = models.BooleanField(default=False, verbose_name="Платный курс")
+    category =
 
     def __str__(self):
         return f"{self.name} [Владелец: {self.owner}]"
@@ -23,6 +25,7 @@ class Course(models.Model):
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
         ordering = ["id"]
+
 
 
 class Lesson(models.Model):
@@ -52,3 +55,25 @@ class Lesson(models.Model):
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
         ordering = ["id"]
+
+# class CourseSubscription(models.Model):
+#     user = models.ForeignKey(
+#         "users.User",
+#         on_delete=models.CASCADE,
+#         related_name="subscriptions",
+#         verbose_name="Пользователь",
+#     )
+#     course = models.ForeignKey(
+#         "Course",
+#         on_delete=models.CASCADE,
+#         related_name="subscriptions",
+#         verbose_name="Курс",
+#     )
+#
+#     class Meta:
+#         verbose_name = "Подписка"
+#         verbose_name_plural = "Подписки"
+#         unique_together = ["user", "course"]
+#
+#     def __str__(self):
+#         return f"{self.user} - {self.course}"
