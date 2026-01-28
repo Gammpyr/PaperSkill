@@ -15,7 +15,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Требуется номер телефона')
 
         user = self.model(phone_number=phone_number, **extra_fields)
-        user.set_password(password)  # <-- Хеширование пароля
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
@@ -32,8 +32,8 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    # username = models.CharField(max_length=30, unique=True, blank=True, null=True, verbose_name='Имя пользователя', )
-    username = None
+    username = models.CharField(max_length=30, unique=True, blank=True, null=True, verbose_name='Имя пользователя', )
+    # username = None
     email = models.EmailField(unique=True, verbose_name='email')
     phone_number = PhoneNumberField(unique=True, verbose_name='Номер телефона')
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, verbose_name='Аватар')
@@ -54,8 +54,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return f"{self.phone_number} ({str(self.first_name) 
-        if self.first_name else ''} {str(self.last_name) if self.last_name else ''})"
+        return f"{self.phone_number}"
 
 
 class Payment(models.Model):
