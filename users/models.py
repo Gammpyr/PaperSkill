@@ -41,7 +41,7 @@ class User(AbstractUser):
 
     courses = models.ManyToManyField('paperskill.Course', blank=True, related_name='users')
     bought_courses = models.ManyToManyField('paperskill.Course', blank=True, related_name='buyers')
-    e
+    completed_courses = models.ManyToManyField('paperskill.Course', blank=True, related_name='completed')
 
     date_joined = models.DateTimeField(auto_now_add=True)
     is_staff = models.BooleanField(default=False)
@@ -60,6 +60,12 @@ class User(AbstractUser):
 
 class Payment(models.Model):
     PAYMENT_METHODS = [("cash", "Наличные"), ("transfer", "Перевод")]
+    PAYMENT_STATUS = [
+        ("pending", "В ожидании"),
+        ("succeeded", "Успешно"),
+        ("failed", "Неудачно"),
+        ("canceled", "Отменено"),
+    ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments")
     payment_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата платежа")
@@ -71,20 +77,18 @@ class Payment(models.Model):
         related_name="paid_users",
         verbose_name="Оплаченный курс",
     )
-    # paid_lesson = models.ForeignKey(
-    #     Lesson,
-    #     blank=True,
-    #     null=True,
-    #     on_delete=models.CASCADE,
-    #     related_name="paid_users",
-    #     verbose_name="Оплаченный урок",
-    # )
     payment_amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма платежа")
     payment_method = models.CharField(
         max_length=50,
         choices=PAYMENT_METHODS,
         default="transfer",
         verbose_name="Метод оплаты",
+    )
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS,
+        default="pending",
+        verbose_name="Статус платежа",
     )
     price_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID цены")
     product_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID продукта")
