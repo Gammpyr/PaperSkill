@@ -1,0 +1,87 @@
+{% extends 'paperskill/base.html' %}
+{% load static %}
+
+{% block title %}{{ lesson.name }} — PaperSkill{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'paperskill:courses_list' %}" class="text-decoration-none">Курсы</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'paperskill:course_detail' course.pk %}" class="text-decoration-none">{{ course.name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ lesson.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <!-- Основной контент урока -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h1 class="display-6 fw-bold">{{ lesson.name }}</h1>
+                        {% if course.owner == user or user.is_superuser %}
+                            <span class="badge bg-info bg-opacity-10 text-info">Редактируемый</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if lesson.image %}
+                        <img src="{{ lesson.image.url }}" class="img-fluid rounded mb-4" alt="{{ lesson.name }}" style="max-height: 400px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center rounded mb-4" style="height: 300px;">
+                            <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                <i class="bi bi-book text-primary fs-1"></i>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">Содержание урока</h5>
+                        {% if lesson.description %}
+                            <div class="text-muted">{{ lesson.description|linebreaks }}</div>
+                        {% else %}
+                            <p class="text-muted">Содержание урока не добавлено.</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary">Урок {{ lesson.order }}</span>
+                        <span class="badge bg-primary bg-opacity-10 text-primary">Курс: {{ course.name }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Боковая панель с действиями -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <a href="{% url 'paperskill:course_detail' course.pk %}" class="btn btn-outline-secondary w-100">Вернуться к курсу</a>
+                    </div>
+                    
+                    <!-- Действия для владельца курса или суперпользователя -->
+                    {% if course.owner == user or user.is_superuser %}
+                        <div class="border-top pt-3 mt-3">
+                            <h6 class="fw-bold mb-3">Действия автора</h6>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'paperskill:lesson_update' course.pk lesson.pk %}" class="btn btn-outline-info">
+                                    <i class="bi bi-pencil me-1"></i> Редактировать урок
+                                </a>
+                                <a href="{% url 'paperskill:lesson_delete' course.pk lesson.pk %}" class="btn btn-outline-danger">
+                                    <i class="bi bi-trash me-1"></i> Удалить урок
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
