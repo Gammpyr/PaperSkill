@@ -2,10 +2,14 @@ from django.contrib.auth.models import AbstractUser, UserManager, BaseUserManage
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+from paperskill.models import Course, Lesson
+
+
 class CustomUserManager(BaseUserManager):
     """
     Кастомный менеджер для модели User с phone_number в качестве USERNAME_FIELD.
     """
+
     def create_user(self, phone_number, password=None, **extra_fields):
         if not phone_number:
             raise ValueError('Требуется номер телефона')
@@ -47,3 +51,41 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({str(self.phone_number)})"
+
+
+class Payment(models.Model):
+    PAYMENT_METHODS = [("cash", "Наличные"), ("transfer", "Перевод")]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments")
+    payment_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата платежа")
+    paid_course = models.ForeignKey(
+        Course,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="paid_users",
+        verbose_name="Оплаченный курс",
+    )
+    # paid_lesson = models.ForeignKey(
+    #     Lesson,
+    #     blank=True,
+    #     null=True,
+    #     on_delete=models.CASCADE,
+    #     related_name="paid_users",
+    #     verbose_name="Оплаченный урок",
+    # )
+    payment_amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Сумма платежа")
+    payment_method = models.CharField(
+        max_length=50,
+        choices=PAYMENT_METHODS,
+        default="transfer",
+        verbose_name="Метод оплаты",
+    )
+    price_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID цены")
+    product_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID продукта")
+    session_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID сессии")
+    payment_url = models.URLField(max_length=500, blank=True, null=True, verbose_name="Ссылка на оплату")
+
+    class Meta:
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
