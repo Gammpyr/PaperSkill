@@ -1,0 +1,5 @@
+[run]
+omit =
+    */config/*
+    */paginators.py
+    */permissions.py

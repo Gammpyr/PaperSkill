@@ -1,19 +1,39 @@
-{% extends 'catalog/base.html' %}
+{% extends 'paperskill/base.html' %}
+{% load static %}
 
-{% block title %}Удаление продукта{% endblock %}
+{% block title %}Удаление курса — PaperSkill{% endblock %}
 
 {% block content %}
-{% include 'catalog/header.html' %}
-	<div class="container mx-auto p-3 border rounded shadow-sm text-center">
-		<h1 class="mb-4">Удалить продукт "{{product.name}}"</h1>
-		<p>Вы точно хотите удалить продукт "{{product.name}}"?</p>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-exclamation-triangle-fill text-danger fs-2"></i>
+                        </div>
+                        <h2 class="fw-bold">Удаление курса</h2>
+                        <p class="text-muted">Вы уверены, что хотите удалить этот курс?</p>
+                    </div>
 
-		<form method="post">
-			{% csrf_token %}
-			{{ form.as_p }}
-			<button class="btn btn-danger" type="submit">Удалить</button>
-			<a class="btn btn-secondary" href="{% url 'catalog:product_detail' product.pk %}">Отмена</a>
-		</form>
-	</div>
+                    <div class="alert alert-warning">
+                        <h5 class="mb-2">«{{ course.name }}»</h5>
+                        <p class="mb-0">Это действие нельзя отменить. Все уроки и данные, связанные с этим курсом, будут удалены без возможности восстановления.</p>
+                    </div>
 
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-flex flex-column flex-sm-row gap-3">
+                            <button type="submit" class="btn btn-danger flex-grow-1">Удалить курс</button>
+                            <a href="{% url 'paperskill:course_detail' course.pk %}" class="btn btn-outline-secondary flex-grow-1">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
